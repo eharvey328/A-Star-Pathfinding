@@ -12,8 +12,18 @@
 <body>
 	<h1>A* Pathfinding</h1>
 	<div id="canvas-holder"></div>
-	<button type="button" class="btn btn-primary" onclick="">Generate Grid</button>
-	<button type="button" class="btn btn-success">Begin Pathfinding</button>
+	<br>
+	<div class="input-group-size">
+	  <span class="input-group-addon" id="sizing-addon2">Size</span>
+	  <input value="50" id="canvas-size" type="text" class="form-control" placeholder="50" aria-describedby="	sizing-addon2">
+	</div>
+	<div class="input-group-density">
+	  <span class="input-group-addon" id="sizing-addon2">Fill</span>
+	  <input value="40" id="canvas-density" type="text" class="form-control" placeholder="40" aria-describedby="	sizing-addon2">
+	</div>
+	<button id="reset-button" type="button" class="btn btn-primary" onclick="resetSketch();">Generate Grid</button>
+	<button type="button" class="btn btn-success" onclick="drawToggle();">Begin Pathfinding</button>
+
 
 </body>
 </html>

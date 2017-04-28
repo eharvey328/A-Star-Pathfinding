@@ -1,5 +1,5 @@
-var cols = 50;
-var rows = 50;
+var cols = 20;
+var rows = 20;
 var grid = new Array(cols);
 
 var openSet = []; // all nodes to be checked
@@ -8,6 +8,9 @@ var start;
 var end;
 var w, h;
 var path = [];
+var drawPath = false;
+var canvas_size = 50;
+var canvas_density = 30;
 
 
 function Spot(i, j) {
@@ -22,7 +25,7 @@ function Spot(i, j) {
 	this.previous = undefined;
 	this.wall = false;
 
-	if (random(1) < 0.4) {
+	if (random(1) < (canvas_density/100)) {
 		this.wall = true;
 	}
 
@@ -67,6 +70,25 @@ function Spot(i, j) {
 function setup() {
 	var canv = createCanvas(400,400);
 	canv.parent('canvas-holder');
+	resetSketch();
+}
+
+function resetSketch() {
+	
+	canvas_size = document.getElementById('canvas-size').value;
+	canvas_density = document.getElementById('canvas-density').value;
+
+	console.log(canvas_size);
+	cols = canvas_size;
+	rows = canvas_size;
+	grid = new Array(cols);
+
+	openSet = []; // all nodes to be checked
+	closedSet = []; // all nodes checked
+	start;
+	end;
+	w, h;
+	path = [];
 
 	// calculate the number of spots horiz and vert
 	w = width / cols;
@@ -96,14 +118,20 @@ function setup() {
 	openSet.push(start);
 	start.wall = false;
 	end.wall = false;
-
-
-	console.log(grid);
+	drawPath = false;
+	loop();
 }
+
+function drawToggle() {
+	drawPath = true;
+}
+
 
 // this function is looping continuously on the page
 function draw() {
 
+
+	//if (drawPath){ 
 	if (openSet.length > 0) {
 		var lowestPos = 0;
 		for (var i = 0; i < openSet.length; i++) {
@@ -114,8 +142,8 @@ function draw() {
 
 		var current = openSet[lowestPos];
 		if (current == end) {
-			noLoop();
 			console.log("Finished");
+			noLoop();
 		}
 
 		removeFromArray(openSet, current);
@@ -186,7 +214,6 @@ function draw() {
 	for (var i = 0; i < path.length; i++) {
 		//path[i].show(color(0,0,255));
 	}
-
 	noFill();
 	stroke(255, 0, 200);
 	strokeWeight(w/2);
@@ -196,6 +223,7 @@ function draw() {
 	}
 
 	endShape();
+//	}
 }
 
 // this can be optimized later
