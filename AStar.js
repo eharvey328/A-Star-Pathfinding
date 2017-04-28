@@ -22,18 +22,18 @@ function Spot(i, j) {
 	this.previous = undefined;
 	this.wall = false;
 
-	if (random(1) < 0.3) {
+	if (random(1) < 0.4) {
 		this.wall = true;
 	}
 
 	// display the spot on the grid
 	this.show = function(color) {
-		fill(color);
 		if (this.wall) {
 			fill(0);
+			noStroke();
+			ellipse(this.i * w + w/2, this.j * h + h/2, w/2, h/2);
 		}
-		noStroke();
-		rect(this.i * w, this.j * h, w-1, h-1); // size is based on the grid
+		//rect(this.i * w, this.j * h, w-1, h-1); // size is based on the grid
 	}
 
 	this.addNeighbors = function(grid) {
@@ -157,7 +157,7 @@ function draw() {
 		return;
 	}
 
-	background(0);
+	background(255);
 
 	for (var i = 0; i < cols; i++) {
 		for(var j = 0; j < rows; j++) {
@@ -183,8 +183,18 @@ function draw() {
 	}
 
 	for (var i = 0; i < path.length; i++) {
-		path[i].show(color(0,0,255));
+		//path[i].show(color(0,0,255));
 	}
+
+	noFill();
+	stroke(255, 0, 200);
+	strokeWeight(w/2);
+	beginShape();
+	for (var i = 0; i < path.length; i++) {
+		vertex(path[i].i * w + w / 2, path[i].j*h + h / 2);
+	}
+
+	endShape();
 }
 
 // this can be optimized later
