@@ -1,5 +1,5 @@
-var cols = 30;
-var rows = 30;
+var cols = 50;
+var rows = 50;
 var grid = new Array(cols);
 
 var openSet = []; // all nodes to be checked
@@ -127,21 +127,26 @@ function draw() {
 			if (!closedSet.includes(neighbor) && !neighbor.wall) {
 				var tempG = current.g + 1;
 
+				var newPath = false;
 				if (openSet.includes(neighbor)) {
 					// already in openSet
 					// update the value if lower
 					if(tempG < neighbor.g) {
 						neighbor.g = tempG;
+						newPath = true;
 					}
 				} else {
 					// add to openSet
 					neighbor.g = tempG;
+					newPath = true;
 					openSet.push(neighbor);
 				}
 
-				neighbor.h = heuristic(neighbor, end);
-				neighbor.f = neighbor.g + neighbor.h;
-				neighbor.previous = current;
+				if (newPath) {
+					neighbor.h = heuristic(neighbor, end);
+					neighbor.f = neighbor.g + neighbor.h;
+					neighbor.previous = current;
+				}
 
 
 			}	
@@ -193,6 +198,6 @@ function removeFromArray(arr, element) {
 
 // checks how far away a point is from another using manhattan dist formula
 function heuristic(a, b) {
-	var d = abs(a.i - b.i) + abs(a.j - b.j);
+	var d = dist(a.i, a.j, b.i, b.j);
 	return d;
 }
