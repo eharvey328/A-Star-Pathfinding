@@ -1,5 +1,5 @@
-var cols = 10;
-var rows = 10;
+var cols = 30;
+var rows = 30;
 var grid = new Array(cols);
 
 var openSet = []; // all nodes to be checked
@@ -19,10 +19,18 @@ function Spot(i, j) {
 	this.h = 0; // heuristic (heading the right dir)
 	this.neighbors = []; // all spots touching this spot
 	this.previous = undefined;
+	this.wall = false;
+
+	if (random(1) < 0.3) {
+		this.wall = true;
+	}
 
 	// display the spot on the grid
 	this.show = function(color) {
 		fill(color);
+		if (this.wall) {
+			fill(0);
+		}
 		noStroke();
 		rect(this.i * w, this.j * h, w-1, h-1); // size is based on the grid
 	}
@@ -72,6 +80,8 @@ function setup() {
 	end = grid[cols-1][rows-1];
 
 	openSet.push(start);
+	start.wall = false;
+	end.wall = false;
 
 
 	console.log(grid);
@@ -101,7 +111,7 @@ function draw() {
 		for (var i = 0; i < neighbors.length; i++) {
 			var neighbor = neighbors[i];
 
-			if (!closedSet.includes(neighbor)) {
+			if (!closedSet.includes(neighbor) && !neighbor.wall) {
 				var tempG = current.g + 1;
 
 				if (openSet.includes(neighbor)) {
