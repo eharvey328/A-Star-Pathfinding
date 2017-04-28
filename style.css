@@ -1,0 +1,30 @@
+body{
+	display: block;
+	margin: auto;
+	border: 1px solid rgba(0,0,0,0.3);
+	border-radius: 10px;
+	width: 600px;
+	height: 600px;
+}
+
+h1 {
+	text-align: center;
+}
+
+canvas {
+	margin: auto;
+	display: block;
+}
+
+#canvas-holder{
+}
+
+.btn-primary{
+	margin-left: 100px;
+	margin-top: 20px;
+}
+
+.btn-success{
+	margin-left: 20px;
+	margin-top: 20px;
+}

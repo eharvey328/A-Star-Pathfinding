@@ -65,7 +65,8 @@ function Spot(i, j) {
 }
 
 function setup() {
-	createCanvas(400,400);
+	var canv = createCanvas(400,400);
+	canv.parent('canvas-holder');
 
 	// calculate the number of spots horiz and vert
 	w = width / cols;
