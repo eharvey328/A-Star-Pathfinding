@@ -9,6 +9,7 @@ var end;
 var w, h;
 var path = [];
 
+
 function Spot(i, j) {
 	// Spot position in grid
 	this.i = i;
@@ -47,6 +48,18 @@ function Spot(i, j) {
 		}
 		if (this.j > 0) {
 			this.neighbors.push(grid[this.i][this.j-1]);
+		}
+		if (i > 0 && j > 0) {
+			this.neighbors.push(grid[this.i-1][this.j-1]);
+		}
+		if (i < cols - 1 && j > 0) {
+			this.neighbors.push(grid[this.i+1][this.j-1]);
+		}
+		if (i > 0 && j < rows - 1) {
+			this.neighbors.push(grid[this.i-1][this.j+1]);
+		}
+		if (i < cols-1 && j < rows-1) {
+			this.neighbors.push(grid[this.i+1][this.j+1]);
 		}
 	}
 }
@@ -134,7 +147,9 @@ function draw() {
 			}	
 		}
 	} else {
-		// no solution
+		console.log('no solution');
+		noLoop();
+		return;
 	}
 
 	background(0);
