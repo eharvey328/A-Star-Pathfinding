@@ -11,6 +11,9 @@ var path = [];
 var drawPath = false;
 var canvas_size = 50;
 var canvas_density = 30;
+var r = 0;
+var g = 0;
+var b = 255;
 
 
 function Spot(i, j) {
@@ -75,6 +78,9 @@ function setup() {
 
 function resetSketch() {
 	
+	r = 0;
+	g = 0;
+	b = 255;
 	canvas_size = document.getElementById('canvas-size').value;
 	canvas_density = document.getElementById('canvas-density').value;
 
@@ -143,6 +149,9 @@ function draw() {
 		var current = openSet[lowestPos];
 		if (current == end) {
 			console.log("Finished");
+			r = 0;
+			g = 255;
+			b = 0;
 			noLoop();
 		}
 
@@ -215,7 +224,12 @@ function draw() {
 		//path[i].show(color(0,0,255));
 	}
 	noFill();
-	stroke(255, 0, 200);
+	if (openSet.length == 0) {
+		r = 255;
+		g = 0;
+		b = 0;
+	}
+	stroke(r, g, b);
 	strokeWeight(w/2);
 	beginShape();
 	for (var i = 0; i < path.length; i++) {
