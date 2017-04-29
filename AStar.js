@@ -1,7 +1,6 @@
 function AStar(start, end) {
     this.lastCheckedNode = start;
     this.openSet = [];
-    // openSet starts with beginning node only
     this.openSet.push(start);
     this.closedSet = [];
     this.start = start;
@@ -26,9 +25,7 @@ function AStar(start, end) {
     //returns 1 if goal reached
     //returns -1 if no solution
     this.step = function() {
-
         if (this.openSet.length > 0) {
-
             // Best next option
             var winner = 0;
             for (var i = 1; i < this.openSet.length; i++) {

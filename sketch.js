@@ -82,6 +82,7 @@ function setup() {
 function stepSearch() {
 	if (!paused || stepsAllowed > 0) {
 		var result = pathfinder.step();
+		console.log(pathfinder);
 		stepsAllowed--;
 
 		switch (result) {
