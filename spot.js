@@ -2,15 +2,12 @@ function Spot(i, j, w, h, grid) {
 	// Spot position in grid
 	this.i = i;
 	this.j = j;
-	this.width = w;
-	this.height = h;
 
 	this.f = 0; // function value of g and h
 	this.g = 0; // "g score" (total cost at pos)
 	this.h = 0; // heuristic (heading the right dir)
-	this.vh = 0; //visual heuristic for prioritising path options
-	this.neighbors = undefined; // all spots touching this spot
-	this.neighboringWalls = undefined;
+	
+	this.neighbors = []; // all spots touching this spot
 	this.previous = undefined;
 	this.wall = false;
 

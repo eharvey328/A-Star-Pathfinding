@@ -40,7 +40,7 @@ function initialize(rows, cols) {
 
 	for (var i = 0; i < cols; i++) {
 		for(var j = 0; j < rows; j++) {
-			grid[i][j] = new Spot(cols, rows, i, j, w, h, grid);
+			grid[i][j] = new Spot(i, j, w, h, grid);
 		}
 	}
 
