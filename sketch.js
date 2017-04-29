@@ -8,6 +8,8 @@ var stepsAllowed = 0;
 var r = 0;
 var g = 0;
 var b = 255;
+var canvas_density = 30;
+//var canvas_size = 50;
 
 
 function runPause() {
@@ -33,8 +35,13 @@ function initialize(rows, cols) {
 	r = 0;
 	g = 0;
 	b = 255;
+	//canvas_size = document.getElementById('canvas-size').value;
 	canvas_density = document.getElementById('canvas-density').value;
-	grid = new Array(cols);
+
+	//cols = canvas_size;
+ 	//rows = canvas_size
+
+ 	grid = new Array(cols);
 
 	w = width / cols;
 	h = height / rows;

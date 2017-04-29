@@ -20,7 +20,7 @@ canvas {
 }
 
 #controls {
-	width: 305px;
+	width: 425px;
 	margin: 40px auto 0;
 }
 
@@ -35,7 +35,6 @@ canvas {
 }
 
 .input-group-size{
-	margin-left: 100px;
 	width: 120px;
 	display: inline-table;
 	vertical-align: top;
