@@ -67,7 +67,7 @@ function initialize(rows, cols) {
 }
 
 function setup() {
-	var canv = createCanvas(500, 500);
+	var canv = createCanvas(600, 600);
 	canv.parent('canvas-holder');
 	initialize(cols, rows);
 }
@@ -112,7 +112,7 @@ function drawWalls() {
 // this function is looping continuously on the page
 function draw() {
 	stepSearch();
-	background(255);
+	background(50);
 	drawWalls();
 
 	for (var i = 0; i < pathfinder.closedSet.length; i++) {
