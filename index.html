@@ -1,29 +1,27 @@
 <html>
 <head>
-  <meta charset="UTF-8">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <link rel="stylesheet" type="text/css" href="style.css">
-  <script language="javascript" type="text/javascript" src="lib/p5.js"></script> 
-  <script language="javascript" src="lib/p5.dom.js"></script>
-  <script language="javascript" type="text/javascript" src="AStar.js"></script>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<script language="javascript" type="text/javascript" src="lib/p5.js"></script> 
+	<script language="javascript" src="lib/p5.dom.js"></script>
+	<script language="javascript" type="text/javascript" src="spot.js"></script>
+	<script language="javascript" type="text/javascript" src="astar.js"></script>
+	<script language="javascript" type="text/javascript" src="sketch.js"></script>
 
 </head>
 
 <body>
 	<h1>A* Pathfinding</h1>
 	<div id="canvas-holder"></div>
-	<br>
-	<div class="input-group-size">
-	  <span class="input-group-addon" id="sizing-addon2">Size</span>
-	  <input value="50" id="canvas-size" type="text" class="form-control" placeholder="50" aria-describedby="	sizing-addon2">
+	<div id="controls">
+		<div class="input-group-density">
+			<span class="input-group-addon" id="sizing-addon2">Density</span>
+			<input value="30" id="canvas-density" type="text" class="form-control" placeholder="30" aria-describedby="	sizing-addon2">
+		</div>
+		<button type="button" id="run-button" class="btn btn-success" onclick="runPause();">Run</button>
+		<button type="button" class="btn btn-primary" onclick="step();">Step</button>
+		<button id="reset-button" type="button" class="btn btn-primary" onclick="restart();">Reset</button>
 	</div>
-	<div class="input-group-density">
-	  <span class="input-group-addon" id="sizing-addon2">Fill</span>
-	  <input value="40" id="canvas-density" type="text" class="form-control" placeholder="40" aria-describedby="	sizing-addon2">
-	</div>
-	<button id="reset-button" type="button" class="btn btn-primary" onclick="resetSketch();">Generate Grid</button>
-	<button type="button" class="btn btn-success" onclick="drawToggle();">Begin Pathfinding</button>
-
-
 </body>
 </html>

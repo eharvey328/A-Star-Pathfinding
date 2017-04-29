@@ -1,256 +1,94 @@
-var cols = 20;
-var rows = 20;
-var grid = new Array(cols);
+function AStar(start, end) {
+    this.lastCheckedNode = start;
+    this.openSet = [];
+    // openSet starts with beginning node only
+    this.openSet.push(start);
+    this.closedSet = [];
+    this.start = start;
+    this.end = end;
 
-var openSet = []; // all nodes to be checked
-var closedSet = []; // all nodes checked
-var start;
-var end;
-var w, h;
-var path = [];
-var drawPath = false;
-var canvas_size = 50;
-var canvas_density = 30;
-var r = 0;
-var g = 0;
-var b = 255;
+    this.heuristic = function(a, b) {
+        return dist(a.i, a.j, b.i, b.j);
+    }
 
+    // Function to delete element from the array
+    this.removeFromArray = function(arr, elt) {
+        // Could use indexOf here instead to be more efficient
+        for (var i = arr.length - 1; i >= 0; i--) {
+            if (arr[i] == elt) {
+                arr.splice(i, 1);
+            }
+        }
+    }
 
-function Spot(i, j) {
-	// Spot position in grid
-	this.i = i;
-	this.j = j;
+    //Run one finding step.
+    //returns 0 if search ongoing
+    //returns 1 if goal reached
+    //returns -1 if no solution
+    this.step = function() {
 
-	this.f = 0; // function value of g and h
-	this.g = 0; // "g score" (total cost at pos)
-	this.h = 0; // heuristic (heading the right dir)
-	this.neighbors = []; // all spots touching this spot
-	this.previous = undefined;
-	this.wall = false;
+        if (this.openSet.length > 0) {
 
-	if (random(1) < (canvas_density/100)) {
-		this.wall = true;
-	}
+            // Best next option
+            var winner = 0;
+            for (var i = 1; i < this.openSet.length; i++) {
+                if (this.openSet[i].f < this.openSet[winner].f) {
+                    winner = i;
+                }
 
-	// display the spot on the grid
-	this.show = function(color) {
-		if (this.wall) {
-			fill(0);
-			noStroke();
-			ellipse(this.i * w + w/2, this.j * h + h/2, w/2, h/2);
-		}
-		//rect(this.i * w, this.j * h, w-1, h-1); // size is based on the grid
-	}
+                //if we have a tie according to the standard heuristic
+                if (this.openSet[i].f == this.openSet[winner].f) {
+                    //Prefer to explore options with longer known paths (closer to goal)
+                    if (this.openSet[i].g > this.openSet[winner].g) {
+                        winner = i;
+                    }
+                }
+            }
+            
+            var current = this.openSet[winner];
+            this.lastCheckedNode = current;
 
-	this.addNeighbors = function(grid) {
-		if (this.i < cols - 1) {
-			this.neighbors.push(grid[this.i+1][this.j]);
-		}
-		if (this.i > 0) {
-			this.neighbors.push(grid[this.i-1][this.j]);
-		}
-		if (this.j < rows-1) {
-			this.neighbors.push(grid[this.i][this.j+1]);
-		}
-		if (this.j > 0) {
-			this.neighbors.push(grid[this.i][this.j-1]);
-		}
-		if (i > 0 && j > 0) {
-			this.neighbors.push(grid[this.i-1][this.j-1]);
-		}
-		if (i < cols - 1 && j > 0) {
-			this.neighbors.push(grid[this.i+1][this.j-1]);
-		}
-		if (i > 0 && j < rows - 1) {
-			this.neighbors.push(grid[this.i-1][this.j+1]);
-		}
-		if (i < cols-1 && j < rows-1) {
-			this.neighbors.push(grid[this.i+1][this.j+1]);
-		}
-	}
-}
+            // Did I finish?
+            if (current === this.end) {
+                console.log("DONE!");
+                return 1;
+            }
 
-function setup() {
-	var canv = createCanvas(400,400);
-	canv.parent('canvas-holder');
-	resetSketch();
-}
+            // Best option moves from openSet to closedSet
+            this.removeFromArray(this.openSet, current);
+            this.closedSet.push(current);
 
-function resetSketch() {
-	
-	r = 0;
-	g = 0;
-	b = 255;
-	canvas_size = document.getElementById('canvas-size').value;
-	canvas_density = document.getElementById('canvas-density').value;
+            // Check all the neighbors
+            var neighbors = current.neighbors;
 
-	console.log(canvas_size);
-	cols = canvas_size;
-	rows = canvas_size;
-	grid = new Array(cols);
+            for (var i = 0; i < neighbors.length; i++) {
+                var neighbor = neighbors[i];
 
-	openSet = []; // all nodes to be checked
-	closedSet = []; // all nodes checked
-	start;
-	end;
-	w, h;
-	path = [];
+                // Valid next spot?
+                if (!this.closedSet.includes(neighbor) && !neighbor.wall) {
+                    // Is this a better path than before?
+                    var tempG = current.g + this.heuristic(neighbor, current);
 
-	// calculate the number of spots horiz and vert
-	w = width / cols;
-	h = height / rows;
+                    // Is this a better path than before?
+                    if (!this.openSet.includes(neighbor)) {
+                        this.openSet.push(neighbor);
+                    } else if (tempG >= neighbor.g) {
+                        // No, it's not a better path
+                        continue;
+                    }
 
-	//create 2d array
-	for (var i = 0; i < cols; i++) {
-		grid[i] = new Array(rows);
-	}
+                    neighbor.g = tempG;
+                    neighbor.h = this.heuristic(neighbor, end);
+                    neighbor.f = neighbor.g + neighbor.h;
+                    neighbor.previous = current;
+                }
 
-	for (var i = 0; i < cols; i++) {
-		for(var j = 0; j < rows; j++) {
-			grid[i][j] = new Spot(i, j);
-		}
-	}
-
-	for (var i = 0; i < cols; i++) {
-		for(var j = 0; j < rows; j++) {
-			grid[i][j].addNeighbors(grid);
-		}
-	}
-
-	//find path from top left to bot right
-	start = grid[0][0];
-	end = grid[cols-1][rows-1];
-
-	openSet.push(start);
-	start.wall = false;
-	end.wall = false;
-	drawPath = false;
-	loop();
-}
-
-function drawToggle() {
-	drawPath = true;
-}
-
-
-// this function is looping continuously on the page
-function draw() {
-
-
-	//if (drawPath){ 
-	if (openSet.length > 0) {
-		var lowestPos = 0;
-		for (var i = 0; i < openSet.length; i++) {
-			if (openSet[i].f < openSet[lowestPos].f) {
-				lowestPos = i;
-			}
-		}
-
-		var current = openSet[lowestPos];
-		if (current == end) {
-			console.log("Finished");
-			r = 0;
-			g = 255;
-			b = 0;
-			noLoop();
-		}
-
-		removeFromArray(openSet, current);
-		closedSet.push(current);
-
-		var neighbors = current.neighbors;
-		for (var i = 0; i < neighbors.length; i++) {
-			var neighbor = neighbors[i];
-
-			if (!closedSet.includes(neighbor) && !neighbor.wall) {
-				var tempG = current.g + 1;
-
-				var newPath = false;
-				if (openSet.includes(neighbor)) {
-					// already in openSet
-					// update the value if lower
-					if(tempG < neighbor.g) {
-						neighbor.g = tempG;
-						newPath = true;
-					}
-				} else {
-					// add to openSet
-					neighbor.g = tempG;
-					newPath = true;
-					openSet.push(neighbor);
-				}
-
-				if (newPath) {
-					neighbor.h = heuristic(neighbor, end);
-					neighbor.f = neighbor.g + neighbor.h;
-					neighbor.previous = current;
-				}
-
-
-			}	
-		}
-	} else {
-		console.log('no solution');
-		noLoop();
-		return;
-	}
-
-	background(255);
-
-	for (var i = 0; i < cols; i++) {
-		for(var j = 0; j < rows; j++) {
-			grid[i][j].show(color(255));
-		}
-	}
-
-	for (var i = 0; i < closedSet.length; i++) {
-		closedSet[i].show(color(255,0,0));
-	}	
-
-	for (var i = 0; i < openSet.length; i++) {
-		openSet[i].show(color(0,255,0));
-	}
-
-	// find the path
-	path = [];
-	var temp = current;
-	path.push(temp);
-	while (temp.previous) {
-		path.push(temp.previous);
-		temp = temp.previous;
-	}
-
-	for (var i = 0; i < path.length; i++) {
-		//path[i].show(color(0,0,255));
-	}
-	noFill();
-	if (openSet.length == 0) {
-		r = 255;
-		g = 0;
-		b = 0;
-	}
-	stroke(r, g, b);
-	strokeWeight(w/2);
-	beginShape();
-	for (var i = 0; i < path.length; i++) {
-		vertex(path[i].i * w + w / 2, path[i].j*h + h / 2);
-	}
-
-	endShape();
-//	}
-}
-
-// this can be optimized later
-function removeFromArray(arr, element) {
-	for (var i = arr.length-1; i>=0; i--) {
-		if (arr[i] == element) {
-			arr.splice(i, 1);
-		}
-	}
-}
-
-// checks how far away a point is from another using manhattan dist formula
-function heuristic(a, b) {
-	var d = dist(a.i, a.j, b.i, b.j);
-	return d;
+            }
+            return 0;
+            // Uh oh, no solution
+        } else {
+            console.log('no solution');
+            return -1;
+        }
+    }
 }
