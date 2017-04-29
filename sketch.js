@@ -5,6 +5,9 @@ var w, h;
 var paused = true;
 var pathfinder;
 var stepsAllowed = 0;
+var r = 0;
+var g = 0;
+var b = 255;
 
 
 function runPause() {
@@ -27,6 +30,9 @@ function restart() {
 
 
 function initialize(rows, cols) {
+	r = 0;
+	g = 0;
+	b = 255;
 	canvas_density = document.getElementById('canvas-density').value;
 	grid = new Array(cols);
 
@@ -74,10 +80,16 @@ function stepSearch() {
 		switch (result) {
 			case -1:
 			status = "No Solution";
+			r = 255;
+			g = 0;
+			b = 0;
 			pauseUnpause(true);
 			break;
 			case 1:
 			status = "Goal Reached!";
+			r = 0;
+			g = 255;
+			b = 0;
 			pauseUnpause(true);
 			break;
 			case 0:
@@ -132,7 +144,7 @@ function calcPath(endNode) {
 function drawPath(path) {
     // Drawing path as continuous line
     noFill();
-    stroke(0, 0, 255);
+    stroke(r, g, b);
     strokeWeight(w/2);
     beginShape();
     for (var i = 0; i < path.length; i++) {
