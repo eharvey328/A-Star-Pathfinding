@@ -41,9 +41,17 @@ canvas {
 }
 
 .input-group-density{
-	width: 120px;
+	width: 140px;
 	display: inline-flex;
 	vertical-align: top;
 }
 
+.size-input{
+	width: 60px;
+}
+
+#canvas-size, #canvas-density {
+	border-top-left-radius: 0px;
+	border-bottom-left-radius: 0px;
+}
 
