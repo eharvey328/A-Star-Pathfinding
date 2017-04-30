@@ -29,6 +29,9 @@ function step() {
 }
 
 function checkStatus() {
+	r = 0;
+	g = 0;
+	b = 255;
 	var MazeToggle = document.getElementById("MazeToggle").parentNode.classList.contains('btn-success');
 	if (MazeToggle)	{
 		isDone = false;
@@ -37,9 +40,6 @@ function checkStatus() {
 		maze = true;
 	}
 	else {
-		r = 0;
-		g = 0;
-		b = 255;
 		cols = document.getElementById('canvas-size').value;
 		rows = cols;
 		initWalls(cols, rows);
