@@ -83,6 +83,7 @@ function Cell(i, j, grid) {
     var y = this.j * w;
 
     stroke(120);
+    strokeWeight(1);
 
     if (this.walls[0]) {
       line(x, y, x + w, y);

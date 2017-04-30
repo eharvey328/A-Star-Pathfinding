@@ -41,7 +41,6 @@ function initMaze() {
 function setup() {
   var canv = createCanvas(601, 601);
   canv.parent('canvas-holder');
-
   initMaze();
 }
 
@@ -64,10 +63,14 @@ function removeWalls(a, b) {
   }
 }
 
-function drawMaze() {
+function drawGrid() {
   for (var i = 0; i < grid.length; i++) {
     grid[i].show(color(255,255,255,15));
   }
+}
+
+function drawMaze() {
+  drawGrid();
 
   current.visited = true;
   current.highlight();
@@ -100,13 +103,10 @@ function initSolve() {
     }
   }
 
-  //console.log(grid);
-
   var start = grid[0];
   var end = grid[399];
 
   pathfinder = new AStar(start, end);
-  //noLoop();
 }
 
 function stepSearch() {
@@ -143,15 +143,13 @@ function draw() {
   }
 
   if(done) {
+
     if(count > 0) {
       initSolve();
       count--;
     }
 
-    for (var i = 0; i < grid.length; i++) {
-      grid[i].show(color(255,255,255,15));
-    }
-
+    drawGrid();
     stepSearch();
 
     for (var i = 0; i < pathfinder.closedSet.length; i++) {
@@ -163,10 +161,12 @@ function draw() {
       node.show(color(0, 255, 0, 50));
     }
 
+    fill(0);
     var path = calcPath(pathfinder.lastCheckedNode);
-    for (var i = 0; i < path.length; i++) {
-      path[i].show(color(0,0,255));
-    }
+    drawPath(path);
+    // for (var i = 0; i < path.length; i++) {
+    //   path[i].show(color(0,0,255,200));
+    // }
   }
 }
 
@@ -181,3 +181,15 @@ function calcPath(endNode) {
     }
     return path
   }
+
+  function drawPath(path) {
+    // Drawing path as continuous line
+    noFill();
+    stroke(0,0,255);
+    strokeWeight(w/4);
+    beginShape();
+    for (var i = 0; i < path.length; i++) {
+      vertex(path[i].i * w + w / 2, path[i].j*w + w / 2);
+    }
+    endShape();
+}
