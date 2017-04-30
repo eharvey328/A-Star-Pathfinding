@@ -1,8 +1,8 @@
 var paused = true;
 var stepsAllowed = 0;
 
-var cols = 50;
-var rows = 50;
+var cols = 30;
+var rows = 30;
 var w, h;
 var cells = [];
 var current;
@@ -12,9 +12,14 @@ var maze = false;
 var isDone = false;
 var count = 1;
 var canvas_density = 20;
-var r = 0;
-var g = 0;
+var r = 48;
+var g = 79;
 var b = 255;
+
+var startX = 0;
+var startY = 0;
+var endX = 29
+var endY = 29
 
 function runPause() {
 	pauseUnpause(!paused);
@@ -29,15 +34,24 @@ function step() {
 	stepsAllowed = 1;
 }
 
+function getCoordValues(sx, sy, ex, ey) {
+	startX = sx;
+	startY = sy;
+	endX = ex;
+	endY = ey;
+	initWalls();
+}
+
 function getSliderValues(size, density) {
 	cols = size;
 	canvas_density = density;
-	restart();
+	reset();
+	getCoordValues(startX, startY, cols-1, cols-1);
 }
 
 function checkStatus() {
-	r = 0;
-	g = 0;
+	r = 48;
+	g = 79;
 	b = 255;
 	var MazeToggle = document.getElementById("maze-toggle").classList.contains('iron-selected');
 	if (MazeToggle)	{
@@ -47,15 +61,22 @@ function checkStatus() {
 		maze = true;
 	}
 	else {
-		//cols = document.getElementById('canvas-size').value;
 		rows = cols;
-		initWalls(cols, rows);
+		startX = document.getElementById('startX').value;
+		startY = document.getElementById('startY').value;
+		endX = document.getElementById('endX').value;
+		endY = document.getElementById('endY').value;
+
+		generateMatrix(rows, cols);
 		maze = false;
 	}
 }
 
-function restart() {
+function reset() {
 	checkStatus();
+	var button = document.getElementById("runbtn");
+	button.active = false;
+	button.textContent = 'Run';
 	pauseUnpause(true);
 }
 

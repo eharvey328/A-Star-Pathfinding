@@ -60,9 +60,9 @@ function AStar(start, end) {
 
             // Did I finish?
             if (current === this.end) {
-                r = 0;
+                r = 118;
                 g = 255;
-                b = 0;
+                b = 3;
                 console.log("DONE!");
                 return 1;
             }
@@ -104,8 +104,8 @@ function AStar(start, end) {
             // Uh oh, no solution
         } else {
             r = 255;
-            g = 0;
-            b = 0;
+            g = 23;
+            b = 68;
             console.log('no solution');
             return -1;
         }

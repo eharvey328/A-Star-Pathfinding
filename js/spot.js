@@ -1,6 +1,7 @@
 function Spot(i, j, w, h, grid) {
 	// Spot position in grid
 	this.grid = grid;
+    
 
 	this.i = i;
 	this.j = j;
@@ -14,6 +15,7 @@ function Spot(i, j, w, h, grid) {
 	this.neighboringWalls = undefined;
 	this.previous = undefined;
 	this.wall = false;
+    this.end = false;
 
 	if (random(1) < (canvas_density/100)) {
 		this.wall = true;
@@ -24,7 +26,6 @@ function Spot(i, j, w, h, grid) {
 		if (this.wall) {
 			fill(0);
 			noStroke();
-			//ellipse(this.i * w + w/2, this.j * h + h/2, w/2, h/2);
 			rect(this.i * w, this.j * h, w, h);
 		} else if (color) {
 			fill(color);

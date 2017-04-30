@@ -1,13 +1,8 @@
-var r = 0;
-var g = 0;
-var b = 255;
 var canvas_density = 30;
-
 var canPassThroughCorners = false;
 var allowDiagonals = true;
 
-function initWalls(rows, cols) {
-
+function generateMatrix(rows, cols) {
 	grid = new Array(cols);
 
 	w = width / cols;
@@ -24,17 +19,22 @@ function initWalls(rows, cols) {
 		}
 	}
 
+	initWalls();
+}
+
+function initWalls() {
 	//find path from top left to bot right
-	var start = grid[0][0];
-	var end = grid[cols-1][rows-1];
+	var start = grid[startX][startY];
+	var end = grid[endX][endY];
 
 	start.wall = false;
 	end.wall = false;
+	end.end = true;
 
 	pathfinder = new AStar(start, end);
 }
 
-function generateWalls() {
+function displayWalls() {
 	for (var i = 0; i < cols; i++) {
 		for(var j = 0; j < rows; j++) {
 			if (grid[i][j].wall) {
@@ -48,15 +48,18 @@ function generateWalls() {
 function pathfindWalls() {
 	stepSearch();
 	background(color(48,48,48));
-	generateWalls();
+	displayWalls();
+
+	pathfinder.start.show(color(0, 230, 118, 150));
+	pathfinder.end.show(color(255,234,0, 200));
 
 	for (var i = 0; i < pathfinder.closedSet.length; i++) {
-		pathfinder.closedSet[i].show(color(255, 0, 0, 50));
+		pathfinder.closedSet[i].show(color(255, 23, 68, 50));
 	}
 
 	for (var i = 0; i < pathfinder.openSet.length; i++) {
 		var node = pathfinder.openSet[i];
-		node.show(color(0, 255, 0, 50));
+		node.show(color(0, 230, 118, 50));
 	}
 
 	fill(0);

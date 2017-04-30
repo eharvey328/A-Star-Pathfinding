@@ -92,7 +92,7 @@
 
     #control-menu {
       width: 325px;
-      padding: 40px 16px;
+      padding: 0 16px;
       height: 100vh;
       float: left;
       border-right: 2px solid rgba(0,0,0,0.16);
@@ -104,37 +104,47 @@
       height: 100vh;
     }
 
+    .container {
+      padding: 40px 0;
+      border-bottom: 2px solid rgba(0,0,0,0.16);
+    }
+
+    #coord-container {
+      margin-top: -20px;
+    }
+
+    #btn-container {
+      position: absolute;
+      bottom: 0;
+    }
+
     .slider-title {
       color: white;
       opacity: .8; 
     }
 
     #sizeslider {
-      --paper-slider-knob-color: #ff1744;
-      --paper-slider-active-color: #ff1744;
-    }
-
-    #densityslider {
       --paper-slider-knob-color: #00E676;
       --paper-slider-active-color: #00E676;
     }
 
+    #densityslider {
+      --paper-slider-knob-color: #ff1744;
+      --paper-slider-active-color: #ff1744;
+    }
+
     paper-slider {
-      width: 256px;
+      width: 100%;
       --paper-slider-input: {
         width: 75px;
       }
-    }
-
-    #btn-container {
-      position: absolute;
-      bottom: 40px;
     }
 
     paper-button {
       margin-top: 18px;
       color: rgba(0,0,0,.8);
       font-weight: 500;
+      font-family: "Roboto Mono";
     }
 
     #step-btn {
@@ -158,15 +168,8 @@
       background-color: #FFEA00;
     }
 
-    #canvas-holder {
-      /*border: 7px solid black;*/
-    }
-
-    #toggle-container {
-      margin-top: 80px;
-    }
-
     paper-toggle-button {
+      font-family: "Roboto Mono";
       --paper-toggle-button-label-color: rgba(255,255,255,.8);
       --paper-toggle-button-unchecked-button-color: #424242;
       --paper-toggle-button-checked-bar-color: #2979FF;
@@ -177,6 +180,33 @@
 
     #diagToggle {
       margin-bottom: 28px;
+    }
+
+    .coord-input {
+      width: 40px;
+      display: inline-block;
+      --paper-input-container-focus-color: rgba(255,255,255,.8);
+      --paper-input-container-input-color: rgba(255,255,255,.8);
+      --paper-input-container: {
+        padding: 0;
+      }
+      --paper-input-container-input: {
+        padding-left: 12px;
+      }
+    }
+
+    .coord-title {
+      color: rgba(255,255,255,.8);
+      margin-top: 20px;
+    }
+
+    #start-coord {
+      width: 100%;
+    }
+
+    #end-coord {
+      width: 100%;
+      margin-top: 20px;
     }
 
 
@@ -194,7 +224,7 @@
           </div>
         </div>
 
-        <paper-menu selected="walls" attr-for-selected="name" on-iron-select="_modeSelected">
+        <paper-menu id="menu" selected="walls" attr-for-selected="name" on-iron-activate="_modeSelected">
           <paper-icon-item name="walls">
             <iron-icon icon="apps" item-icon></iron-icon>Walls
           </paper-icon-item>
@@ -206,26 +236,47 @@
 
       <div id="control-menu" class="vertical">
 
-        <div id="slider-container">
+        <div id="coord-container" class="vertical container">
+
+          <div id="start-coord" class="horizontal justified">
+            <div class="coord-title">Start Index:</div>
+            <div class="coord-wrapper" class="horizontal">
+              <paper-input class="coord-input" id="startX" value="0" type="number" on-input="setCoord" auto-validate
+              allowed-pattern="^\d*$"></paper-input>
+              <paper-input class="coord-input" id="startY" value="0" type="number" on-input="setCoord" auto-validate
+              allowed-pattern="^\d*$"></paper-input>
+            </div>
+          </div>
+
+          <div class="horizontal justified" id="end-coord">
+            <div class="coord-title">End Index:</div>
+            <div class="coord-wrapper" class="horizontal">
+              <paper-input class="coord-input" id="endX" value="29" type="number" on-input="setCoord"></paper-input>
+              <paper-input class="coord-input" id="endY" value="29" type="number" on-input="setCoord"></paper-input>
+            </div>
+          </div>
+        </div>
+
+        <div id="slider-container" class="container">
           <div id="sstitle" class="slider-title">Size</div>
-          <paper-slider id="sizeslider" value="50" max="100" min="10" editable></paper-slider>
+          <paper-slider id="sizeslider" value="30" max="100" min="10" editable on-change="_setSlider"></paper-slider>
           <div id="dstitle" class="slider-title">Density</div>
-          <paper-slider id="densityslider" value="20" max="50" editable></paper-slider>
+          <paper-slider id="densityslider" value="20" max="40" editable on-change="_setSlider"></paper-slider>
         </div>
 
-        <div id="toggle-container" class="vertical">
+        <div id="toggle-container" class="vertical container">
           <paper-toggle-button id="diagToggle" checked>Diagonal Traversal</paper-toggle-button>
-          <paper-toggle-button id="cornerToggle">Can Pass Corners</paper-toggle-button>
+          <paper-toggle-button id="cornerToggle">Through Corners</paper-toggle-button>
         </div>
 
-        <div id="btn-container">  
+        <div id="btn-container" class="container">  
           <paper-button raised id="step-btn" onclick="step();">Step</paper-button>
-          <paper-button raised id="reset-btn" onclick="restart();" on-tap="_resetTapped">Reset</paper-button>
+          <paper-button raised id="reset-btn" onclick="reset();">Reset</paper-button>
           <paper-button raised id="runbtn" onclick="runPause();" on-tap="_toggleText" toggles>Run</paper-button>
         </div>
 
       </div>
-      
+
       <div id="canvas-container" class="vertical center-center">
         <div id="canvas-holder"></div>
       </div>
@@ -245,18 +296,6 @@
     },
 
     ready: function () {
-      this.$.sizeslider.addEventListener('change', function () {
-        var sizeValue = this.$.sizeslider.immediateValue;
-        var densityValue = this.$.densityslider.immediateValue;
-        getSliderValues(sizeValue, densityValue);
-      });
-
-      this.$.densityslider.addEventListener('change', function () {
-        var sizeValue = this.$.sizeslider.immediateValue;
-        var densityValue = this.$.densityslider.immediateValue;
-        getSliderValues(sizeValue, densityValue);
-      });
-
       this.$.diagToggle.addEventListener('change', function () {
         if (this.checked) {
           allowDiagonals = true;
@@ -274,10 +313,12 @@
       });
     },
 
-    _resetTapped : function() {
-      var button = this.$.runbtn;
-      button.active = false;
-      button.textContent = 'Run';
+    setCoord : function() {
+      var startXCoord = this.$.startX.value;
+      var startYCoord = this.$.startY.value;
+      var endXCoord = this.$.endX.value;
+      var endYCoord = this.$.endY.value;
+      getCoordValues(startXCoord, startYCoord, endXCoord, endYCoord);
     },
 
     _toggleText : function() {
@@ -289,9 +330,23 @@
       }
     },
 
+    _setSlider : function() {
+      var sizeValue = this.$.sizeslider.value;
+      var densityValue = this.$.densityslider.value;
+      this.$.endX.value = sizeValue - 1;
+      this.$.endY.value = sizeValue - 1;
+
+      console.log(sizeValue);
+
+      getSliderValues(sizeValue, densityValue);
+    },
+
     immediateValueChangeHandler: function (e) {
       var sizeValue = this.$.sizeslider.immediateValue;
       var densityValue = this.$.densityslider.immediateValue;
+      this.$.endX.value = sizeValue - 1;
+      this.$.endY.value = sizeValue - 1;
+
       getSliderValues(sizeValue, densityValue);
     },
 
@@ -309,7 +364,7 @@
          densityTitle.style.display = "block";
        }
      }
-     restart();
+     reset();
    }
  });
 
