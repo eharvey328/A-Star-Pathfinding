@@ -6,6 +6,7 @@
 <link rel="import" href="bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="bower_components/paper-slider/paper-slider.html">
 <link rel="import" href="bower_components/paper-button/paper-button.html">
+<link rel="import" href="bower_components/paper-toggle-button/paper-toggle-button.html">
 
 <dom-module id="astar-app">
   <style>
@@ -126,18 +127,14 @@
     }
 
     #btn-container {
-      margin-top: 80px;
+      position: absolute;
+      bottom: 40px;
     }
 
     paper-button {
       margin-top: 18px;
-      color: rgba(255,255,255,.8);
-    }
-
-    #run-btn {
-      background-color: #00C853;
+      color: rgba(0,0,0,.8);
       font-weight: 500;
-      display: flex;
     }
 
     #step-btn {
@@ -146,12 +143,40 @@
     }
 
     #reset-btn {
-      background-color: #757575;
+      background-color: #ff1744;
       width: 131px;
     } 
 
+    #runbtn {
+      background-color: #00C853;
+      display: flex;
+      -webkit-transition: background-color 300ms;
+      transition: background-color 300ms;
+    }
+
+    #runbtn[active] {
+      background-color: #FFEA00;
+    }
+
     #canvas-holder {
       /*border: 7px solid black;*/
+    }
+
+    #toggle-container {
+      margin-top: 80px;
+    }
+
+    paper-toggle-button {
+      --paper-toggle-button-label-color: rgba(255,255,255,.8);
+      --paper-toggle-button-unchecked-button-color: #424242;
+      --paper-toggle-button-checked-bar-color: #2979FF;
+      --paper-toggle-button-checked-button-color: #2979FF;
+      --paper-toggle-button-checked-ink-color: #2979FF;
+      --paper-toggle-button-label-spacing: 12px;
+    }
+
+    #diagToggle {
+      margin-bottom: 28px;
     }
 
 
@@ -179,7 +204,8 @@
         </paper-menu>
       </app-drawer>
 
-      <div id="control-menu" class="vertical justified">
+      <div id="control-menu" class="vertical">
+
         <div id="slider-container">
           <div id="sstitle" class="slider-title">Size</div>
           <paper-slider id="sizeslider" value="50" max="100" min="10" editable></paper-slider>
@@ -187,11 +213,17 @@
           <paper-slider id="densityslider" value="20" max="50" editable></paper-slider>
         </div>
 
+        <div id="toggle-container" class="vertical">
+          <paper-toggle-button id="diagToggle" checked>Diagonal Traversal</paper-toggle-button>
+          <paper-toggle-button id="cornerToggle">Can Pass Corners</paper-toggle-button>
+        </div>
+
         <div id="btn-container">  
           <paper-button raised id="step-btn" onclick="step();">Step</paper-button>
-          <paper-button raised id="reset-btn" onclick="restart();">Reset</paper-button>
-          <paper-button raised id="run-btn" onclick="runPause();">Run</paper-button>
+          <paper-button raised id="reset-btn" onclick="restart();" on-tap="_resetTapped">Reset</paper-button>
+          <paper-button raised id="runbtn" onclick="runPause();" on-tap="_toggleText" toggles>Run</paper-button>
         </div>
+
       </div>
       
       <div id="canvas-container" class="vertical center-center">
@@ -210,13 +242,51 @@
 
     listeners: {
       'immediate-value-change': 'immediateValueChangeHandler',
-      'change': 'changeHandler'
     },
 
-    changeHandler: function (e) {
-      var sizeValue = this.$.sizeslider.immediateValue;
-      var densityValue = this.$.densityslider.immediateValue;
-      getSliderValues(sizeValue, densityValue);
+    ready: function () {
+      this.$.sizeslider.addEventListener('change', function () {
+        var sizeValue = this.$.sizeslider.immediateValue;
+        var densityValue = this.$.densityslider.immediateValue;
+        getSliderValues(sizeValue, densityValue);
+      });
+
+      this.$.densityslider.addEventListener('change', function () {
+        var sizeValue = this.$.sizeslider.immediateValue;
+        var densityValue = this.$.densityslider.immediateValue;
+        getSliderValues(sizeValue, densityValue);
+      });
+
+      this.$.diagToggle.addEventListener('change', function () {
+        if (this.checked) {
+          allowDiagonals = true;
+        } else {
+          allowDiagonals = false;
+        }
+      });
+
+      this.$.cornerToggle.addEventListener('change', function () {
+        if (this.checked) {
+          canPassThroughCorners = true;
+        } else {
+          canPassThroughCorners = false;
+        }
+      });
+    },
+
+    _resetTapped : function() {
+      var button = this.$.runbtn;
+      button.active = false;
+      button.textContent = 'Run';
+    },
+
+    _toggleText : function() {
+      var button = this.$.runbtn;
+      if(button.active) {
+        button.textContent = 'Pause';
+      } else {
+        button.textContent = 'Run';
+      }
     },
 
     immediateValueChangeHandler: function (e) {
@@ -235,13 +305,13 @@
           densityslider.style.display = "none";
           densityTitle.style.display = "none";
         } else {
-           densityslider.style.display = "flex";
-           densityTitle.style.display = "block";
-        }
-      }
-      restart();
-    }
-  });
+         densityslider.style.display = "flex";
+         densityTitle.style.display = "block";
+       }
+     }
+     restart();
+   }
+ });
 
 </script>
 </dom-module>

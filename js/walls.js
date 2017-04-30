@@ -5,11 +5,10 @@ var canvas_density = 30;
 
 var canPassThroughCorners = false;
 var allowDiagonals = true;
-//var canvas_size = 50;
 
 function initWalls(rows, cols) {
 
- 	grid = new Array(cols);
+	grid = new Array(cols);
 
 	w = width / cols;
 	h = height / rows;
@@ -48,7 +47,7 @@ function generateWalls() {
 // this function is looping continuously on the page
 function pathfindWalls() {
 	stepSearch();
-	background(50);
+	background(color(48,48,48));
 	generateWalls();
 
 	for (var i = 0; i < pathfinder.closedSet.length; i++) {
