@@ -6,8 +6,19 @@ function AStar(start, end) {
     this.start = start;
     this.end = end;
 
-    this.heuristic = function(a, b) {
+    this.visualDist = function(a, b) {
         return dist(a.i, a.j, b.i, b.j);
+    }
+
+    // An educated guess of how far it is between two points
+    this.heuristic = function(a, b) {
+        var d;
+        if (allowDiagonals) {
+            d = dist(a.i, a.j, b.i, b.j);
+        } else {
+            d = abs(a.i - b.i) + abs(a.j - b.j);
+        }
+        return d;
     }
 
     // Function to delete element from the array
@@ -35,6 +46,12 @@ function AStar(start, end) {
                     if (this.openSet[i].g > this.openSet[winner].g) {
                         winner = i;
                     }
+
+                    if (!this.allowDiagonals) {
+                        if (this.openSet[i].g == this.openSet[winner].g && this.openSet[i].vh < this.openSet[winner].vh) {
+                            winner = i;
+                        }
+                    }
                 }
             }
             
@@ -52,7 +69,7 @@ function AStar(start, end) {
             this.closedSet.push(current);
 
             // Check all the neighbors
-            var neighbors = current.neighbors;
+            var neighbors = current.getNeighbors();
 
             for (var i = 0; i < neighbors.length; i++) {
                 var neighbor = neighbors[i];
@@ -72,6 +89,9 @@ function AStar(start, end) {
 
                     neighbor.g = tempG;
                     neighbor.h = this.heuristic(neighbor, end);
+                    if (!allowDiagonals) {
+                        neighbor.vh = this.visualDist(neighbor, end);
+                    }
                     neighbor.f = neighbor.g + neighbor.h;
                     neighbor.previous = current;
                 }

@@ -13,6 +13,10 @@ function Cell(i, j, grid) {
   this.walls = [true, true, true, true];
   this.visited = false;
 
+  this.getNeighbors = function() {
+      return this.neighbors;
+  }
+
   this.addNeighbors = function(grid) {
     var top = grid[index(i, j - 1)];
     var right = grid[index(i + 1, j)];

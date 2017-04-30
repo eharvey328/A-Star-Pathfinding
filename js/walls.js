@@ -2,6 +2,9 @@ var r = 0;
 var g = 0;
 var b = 255;
 var canvas_density = 30;
+
+var canPassThroughCorners = false;
+var allowDiagonals = true;
 //var canvas_size = 50;
 
 function initWalls(rows, cols) {
@@ -27,12 +30,6 @@ function initWalls(rows, cols) {
 	for (var i = 0; i < cols; i++) {
 		for(var j = 0; j < rows; j++) {
 			grid[i][j] = new Spot(i, j, w, h, grid);
-		}
-	}
-
-	for (var i = 0; i < cols; i++) {
-		for(var j = 0; j < rows; j++) {
-			grid[i][j].addNeighbors(grid);
 		}
 	}
 

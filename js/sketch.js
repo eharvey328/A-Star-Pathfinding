@@ -23,7 +23,8 @@ function step() {
 }
 
 function restart() {
-	initialize(cols, rows);
+	initWalls(cols, rows);
+	//initMaze();
 	pauseUnpause(true);
 }
 
