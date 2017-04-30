@@ -11,6 +11,7 @@ var pathfinder;
 var maze = false;
 var isDone = false;
 var count = 1;
+var canvas_density = 20;
 var r = 0;
 var g = 0;
 var b = 255;
@@ -28,11 +29,17 @@ function step() {
 	stepsAllowed = 1;
 }
 
+function getSliderValues(size, density) {
+	cols = size;
+	canvas_density = density;
+	restart();
+}
+
 function checkStatus() {
 	r = 0;
 	g = 0;
 	b = 255;
-	var MazeToggle = document.getElementById("MazeToggle").parentNode.classList.contains('btn-success');
+	var MazeToggle = document.getElementById("maze-toggle").classList.contains('iron-selected');
 	if (MazeToggle)	{
 		isDone = false;
 		count = 1;
@@ -40,7 +47,7 @@ function checkStatus() {
 		maze = true;
 	}
 	else {
-		cols = document.getElementById('canvas-size').value;
+		//cols = document.getElementById('canvas-size').value;
 		rows = cols;
 		initWalls(cols, rows);
 		maze = false;

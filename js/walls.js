@@ -8,7 +8,6 @@ var allowDiagonals = true;
 //var canvas_size = 50;
 
 function initWalls(rows, cols) {
-	canvas_density = document.getElementById('canvas-density').value;
 
  	grid = new Array(cols);
 

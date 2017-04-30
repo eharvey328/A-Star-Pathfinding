@@ -1,14 +1,20 @@
+var nCols;
+var nRows;
+
 function initMaze() {
+  nCols = cols;
+  nRows = rows
+
   w = 30;
-  cols = floor(width/w);
-  rows = floor(height/w);
+  nCols = floor(width/w);
+  nRows = floor(height/w);
 
   cells = [];
   stack = [];
   current = null;
 
-  for (var j = 0; j < rows; j++) {
-    for (var i = 0; i < cols; i++) {
+  for (var j = 0; j < nRows; j++) {
+    for (var i = 0; i < nCols; i++) {
       var cell = new Cell(i, j, cells);
       cells.push(cell);
     }
@@ -42,8 +48,6 @@ function removeWalls(a, b) {
 }
 
 function generateMaze() {
-  drawGrid();
-
   current.visited = true;
   current.highlight();
 
@@ -62,15 +66,15 @@ function generateMaze() {
 }
 
 function index(i, j) {
-  if (i < 0 || j < 0 || i > cols-1 || j > rows-1) {
+  if (i < 0 || j < 0 || i > nCols-1 || j > nRows-1) {
     return -1;
   }
-  return i + j * cols;
+  return i + j * nCols;
 }
 
 function initPathfinder() {
-  for (var i = 0; i < cols; i++) {
-    for(var j = 0; j < rows; j++) {
+  for (var i = 0; i < nCols; i++) {
+    for(var j = 0; j < nRows; j++) {
       cells[index(i, j)].addNeighbors(cells);
     }
   }
@@ -83,9 +87,10 @@ function initPathfinder() {
 
 function pathfindMaze() {
   
-  background(20);
+  background(color(33,33,33));
+  drawGrid();
   
-  if(!isDone) {
+  if(!isDone && !paused) {
     isDone = generateMaze();
   }
 
