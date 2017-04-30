@@ -11,6 +11,9 @@ var pathfinder;
 var maze = false;
 var isDone = false;
 var count = 1;
+var r = 0;
+var g = 0;
+var b = 255;
 
 function runPause() {
 	pauseUnpause(!paused);
@@ -34,6 +37,9 @@ function checkStatus() {
 		maze = true;
 	}
 	else {
+		r = 0;
+		g = 0;
+		b = 255;
 		cols = document.getElementById('canvas-size').value;
 		rows = cols;
 		initWalls(cols, rows);

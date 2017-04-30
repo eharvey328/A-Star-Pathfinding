@@ -60,6 +60,9 @@ function AStar(start, end) {
 
             // Did I finish?
             if (current === this.end) {
+                r = 0;
+                g = 255;
+                b = 0;
                 console.log("DONE!");
                 return 1;
             }
@@ -100,6 +103,9 @@ function AStar(start, end) {
             return 0;
             // Uh oh, no solution
         } else {
+            r = 255;
+            g = 0;
+            b = 0;
             console.log('no solution');
             return -1;
         }
@@ -145,7 +151,7 @@ function calcPath(endNode) {
 function drawPath(path) {
     // Drawing path as continuous line
     noFill();
-    stroke(0,0,255);
+    stroke(r,g,b);
     strokeWeight(w/4);
     beginShape();
     for (var i = 0; i < path.length; i++) {
