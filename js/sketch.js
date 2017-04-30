@@ -8,6 +8,7 @@ var cells = [];
 var current;
 var stack = [];
 var pathfinder;
+var maze = false;
 
 function runPause() {
 	pauseUnpause(!paused);
@@ -22,20 +23,32 @@ function step() {
 	stepsAllowed = 1;
 }
 
+function checkStatus() {
+	var MazeToggle = document.getElementById("MazeToggle").parentNode.classList.contains('btn-success');
+	if (MazeToggle)	{
+		initMaze();
+		maze = true;
+	}
+	else {
+		cols = document.getElementById('canvas-size').value;
+		rows = cols;
+		initWalls(cols, rows);
+		maze = false;
+	}
+}
+
 function restart() {
-	initWalls(cols, rows);
-	//initMaze();
+	checkStatus();
 	pauseUnpause(true);
 }
 
 function setup() {
 	var canv = createCanvas(601, 601);
 	canv.parent('canvas-holder');
-	initWalls(cols, rows);
-	//initMaze();
+	checkStatus();
 }
 
 function draw() {
-	pathfindWalls();
-	//pathfindMaze();
+	if (maze) pathfindMaze();
+	else pathfindWalls();
 }
