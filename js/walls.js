@@ -11,11 +11,7 @@ function initWalls(rows, cols) {
 	r = 0;
 	g = 0;
 	b = 255;
-	//canvas_size = document.getElementById('canvas-size').value;
 	canvas_density = document.getElementById('canvas-density').value;
-
-	//cols = canvas_size;
- 	//rows = canvas_size
 
  	grid = new Array(cols);
 

@@ -3,6 +3,10 @@ function initMaze() {
   cols = floor(width/w);
   rows = floor(height/w);
 
+  cells = [];
+  stack = [];
+  current = null;
+
   for (var j = 0; j < rows; j++) {
     for (var i = 0; i < cols; i++) {
       var cell = new Cell(i, j, cells);
@@ -77,10 +81,8 @@ function initPathfinder() {
   pathfinder = new AStar(start, end);
 }
 
-var isDone = false;
-var count = 1;
-
 function pathfindMaze() {
+  
   background(20);
   
   if(!isDone) {

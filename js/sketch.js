@@ -9,6 +9,8 @@ var current;
 var stack = [];
 var pathfinder;
 var maze = false;
+var isDone = false;
+var count = 1;
 
 function runPause() {
 	pauseUnpause(!paused);
@@ -26,6 +28,8 @@ function step() {
 function checkStatus() {
 	var MazeToggle = document.getElementById("MazeToggle").parentNode.classList.contains('btn-success');
 	if (MazeToggle)	{
+		isDone = false;
+		count = 1;
 		initMaze();
 		maze = true;
 	}
