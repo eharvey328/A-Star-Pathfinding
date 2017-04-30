@@ -13,13 +13,6 @@ function Cell(i, j, grid) {
   this.walls = [true, true, true, true];
   this.visited = false;
 
-  function index(i, j) {
-    if (i < 0 || j < 0 || i > cols-1 || j > rows-1) {
-      return -1;
-    }
-    return i + j * cols;
-  }
-
   this.addNeighbors = function(grid) {
     var top = grid[index(i, j - 1)];
     var right = grid[index(i + 1, j)];
@@ -104,4 +97,11 @@ function Cell(i, j, grid) {
       rect(x, y, w, w);
     }
   }
+}
+
+function index(i, j) {
+  if (i < 0 || j < 0 || i > cols-1 || j > rows-1) {
+    return -1;
+  }
+  return i + j * cols;
 }

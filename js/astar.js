@@ -20,10 +20,6 @@ function AStar(start, end) {
         }
     }
 
-    //Run one finding step.
-    //returns 0 if search ongoing
-    //returns 1 if goal reached
-    //returns -1 if no solution
     this.step = function() {
         if (this.openSet.length > 0) {
             // Best next option
@@ -88,4 +84,52 @@ function AStar(start, end) {
             return -1;
         }
     }
+}
+
+function stepSearch() {
+    if (!paused || stepsAllowed > 0) {
+        var result = pathfinder.step();
+        stepsAllowed--;
+
+        switch (result) {
+            case -1:
+            //status = "No Solution";
+            pauseUnpause(true);
+            break;
+
+            case 1:
+            //status = "Goal Reached!";
+            pauseUnpause(true);
+            break;
+
+            case 0:
+            //status = "Still Searching"
+            break;
+        }
+    }
+}
+
+function calcPath(endNode) {
+    // Find the path by working backwards
+    path = [];
+    var temp = endNode;
+    path.push(temp);
+    while (temp.previous) {
+      path.push(temp.previous);
+      temp = temp.previous;
+  }
+
+  return path
+}
+
+function drawPath(path) {
+    // Drawing path as continuous line
+    noFill();
+    stroke(0,0,255);
+    strokeWeight(w/4);
+    beginShape();
+    for (var i = 0; i < path.length; i++) {
+      vertex(path[i].i * w + w / 2, path[i].j*w + w / 2);
+  }
+  endShape();
 }
