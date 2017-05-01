@@ -1,16 +1,17 @@
 var nCols;
 var nRows;
 
-function initMaze() {
+function initMaze(cSize, start, end) {
   nCols = cols;
   nRows = rows
 
-  w = 30;
+  w = cSize;
   nCols = floor(width/w);
   nRows = floor(height/w);
 
   cells = [];
   stack = [];
+
   current = null;
 
   for (var j = 0; j < nRows; j++) {
@@ -19,12 +20,22 @@ function initMaze() {
       cells.push(cell);
     }
   }
+
+  setPath(start, end);
   current = cells[0];
 }
 
-function drawGrid() {
+function setPath(start, end) {
+  cells[start].start = true;
+  cells[end].end = true;
+}
+
+function drawGrid(start, end) {
+  cells[start].show(color(0,230,118,200));
+  cells[end].show(color(255,234,0,200));
+
   for (var i = 0; i < cells.length; i++) {
-    cells[i].show(color(255,255,255,15));
+    cells[i].show(color(0,0,0,16));
   }
 }
 
@@ -72,36 +83,37 @@ function index(i, j) {
   return i + j * nCols;
 }
 
-function initPathfinder() {
+function initPathfinder(start, end) {
   for (var i = 0; i < nCols; i++) {
     for(var j = 0; j < nRows; j++) {
       cells[index(i, j)].addNeighbors(cells);
     }
   }
 
-  var start = cells[0];
-  var end = cells[399];
+  var start = cells[start];
+  var end = cells[end];
 
   pathfinder = new AStar(start, end);
 }
 
-function pathfindMaze() {
-  
-  background(color(33,33,33));
-  drawGrid();
-  
-  if(!isDone && !paused) {
+function pathfindMaze(mode, start, end) {
+  background(color(48,48,48));
+  drawGrid(start, end);
+
+  if(mode == 0 && !paused) {
     isDone = generateMaze();
   }
 
-  if(isDone) {
+  if(isDone && mode == 0) {
+    paused = true;
+  }
 
+  if(mode == 1) {
     if(count > 0) {
-      initPathfinder();
+      initPathfinder(start, end);
       count--;
     }
 
-    drawGrid();
     stepSearch();
 
     for (var i = 0; i < pathfinder.closedSet.length; i++) {

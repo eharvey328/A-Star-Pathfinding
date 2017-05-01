@@ -15,6 +15,10 @@ var canvas_density = 20;
 var r = 48;
 var g = 79;
 var b = 255;
+var mode = 0;
+var cellSize = 30;
+var startCell = 0;
+var endCell = 399;
 
 var startX = 0;
 var startY = 0;
@@ -22,6 +26,12 @@ var endX = 29
 var endY = 29
 
 function runPause() {
+	mode = 1;
+	pauseUnpause(!paused);
+}
+
+function genMaze() {
+	mode = 0;
 	pauseUnpause(!paused);
 }
 
@@ -30,6 +40,9 @@ function pauseUnpause(pause) {
 }
 
 function step() {
+	if(isDone) {
+		mode = 1;
+	}
 	pauseUnpause(true);
 	stepsAllowed = 1;
 }
@@ -42,9 +55,16 @@ function getCoordValues(sx, sy, ex, ey) {
 	initWalls();
 }
 
-function getSliderValues(size, density) {
+function getCellValues(sc, ec) {
+	startCell = sc;
+	endCell = ec;
+	setPath(startCell, endCell);
+}
+
+function getSliderValues(size, density, cell) {
 	cols = size;
 	canvas_density = density;
+	cellSize = cell;
 	reset();
 	getCoordValues(startX, startY, cols-1, cols-1);
 }
@@ -55,9 +75,12 @@ function checkStatus() {
 	b = 255;
 	var MazeToggle = document.getElementById("maze-toggle").classList.contains('iron-selected');
 	if (MazeToggle)	{
+		mode = 0;
 		isDone = false;
 		count = 1;
-		initMaze();
+		startCell = document.getElementById('startCell').value;
+		endCell = document.getElementById('endCell').value;
+		initMaze(cellSize, startCell, endCell);
 		maze = true;
 	}
 	else {
@@ -87,6 +110,6 @@ function setup() {
 }
 
 function draw() {
-	if (maze) pathfindMaze();
+	if (maze) pathfindMaze(mode, startCell, endCell);
 	else pathfindWalls();
 }

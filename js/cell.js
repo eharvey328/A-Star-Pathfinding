@@ -9,6 +9,8 @@ function Cell(i, j, grid) {
   this.neighbors = [];
   this.previous = undefined;
   this.wall = false;
+  this.start = false;
+  this.end = false;
 
   this.walls = [true, true, true, true];
   this.visited = false;
@@ -71,7 +73,7 @@ function Cell(i, j, grid) {
     var y = this.j * w;
     
     noStroke();
-    fill(0, 0, 255);
+    fill(48, 79, 255);
     rect(x, y, w, w);
   }
 
@@ -95,7 +97,7 @@ function Cell(i, j, grid) {
       line(x, y + w, x, y);
     }
 
-    if (this.visited) {
+    if (this.visited || this.start || this.end) {
       noStroke();
       fill(color);
       rect(x, y, w, w);
