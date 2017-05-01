@@ -11,7 +11,9 @@
     "iron-icon": "PolymerElements/iron-icon#^1.0.13",
     "paper-slider": "PolymerElements/paper-slider#^1.0.15",
     "paper-button": "PolymerElements/paper-button#^1.0.15",
-    "paper-toggle-button": "PolymerElements/paper-toggle-button#^1.3.0"
+    "paper-toggle-button": "PolymerElements/paper-toggle-button#^1.3.0",
+    "paper-radio-button": "PolymerElements/paper-radio-button#^1.4.0",
+    "paper-radio-group": "PolymerElements/paper-radio-group#^1.2.2"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",

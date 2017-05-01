@@ -93,7 +93,11 @@ function initPathfinder(start, end) {
   var start = cells[start];
   var end = cells[end];
 
-  pathfinder = new AStar(start, end);
+  if(alg == "astar") {
+    pathfinder = new AStar(start, end);
+  } else {
+    pathfinder = new dijkstra(start, end);
+  }
 }
 
 function pathfindMaze(mode, start, end) {

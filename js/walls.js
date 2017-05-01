@@ -31,7 +31,11 @@ function initWalls() {
 	end.wall = false;
 	end.end = true;
 
-	pathfinder = new AStar(start, end);
+	if(alg == "astar") {
+		pathfinder = new AStar(start, end);
+	} else {
+		pathfinder = new dijkstra(start, end);
+	}
 }
 
 function displayWalls() {

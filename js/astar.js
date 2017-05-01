@@ -21,13 +21,10 @@ function AStar(start, end) {
         return d;
     }
 
-    // Function to delete element from the array
     this.removeFromArray = function(arr, elt) {
-        // Could use indexOf here instead to be more efficient
-        for (var i = arr.length - 1; i >= 0; i--) {
-            if (arr[i] == elt) {
-                arr.splice(i, 1);
-            }
+        var index = arr.indexOf(elt);
+        if (index > -1) {
+            arr.splice(index, 1);
         }
     }
 
@@ -101,7 +98,7 @@ function AStar(start, end) {
 
             }
             return 0;
-            // Uh oh, no solution
+            
         } else {
             r = 255;
             g = 23;

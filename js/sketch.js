@@ -8,6 +8,7 @@ var cells = [];
 var current;
 var stack = [];
 var pathfinder;
+var bfspathfinder;
 var maze = false;
 var isDone = false;
 var count = 1;
@@ -25,14 +26,26 @@ var startY = 0;
 var endX = 29
 var endY = 29
 
+var resetCount = 1;
+
+var alg = "astar"
+
 function runPause() {
 	mode = 1;
+	alg = document.getElementById("radioGroup").selected;
+	initWalls();
 	pauseUnpause(!paused);
 }
 
 function genMaze() {
 	mode = 0;
+	resetCount--;
 	pauseUnpause(!paused);
+}
+
+function resetMaze() {
+	resetCount = 1;
+	reset();
 }
 
 function pauseUnpause(pause) {
@@ -69,6 +82,10 @@ function getSliderValues(size, density, cell) {
 	getCoordValues(startX, startY, cols-1, cols-1);
 }
 
+function setAlg(algorithm) {
+	alg = algorithm;
+}
+
 function checkStatus() {
 	r = 48;
 	g = 79;
@@ -78,9 +95,16 @@ function checkStatus() {
 		mode = 0;
 		isDone = false;
 		count = 1;
+		
 		startCell = document.getElementById('startCell').value;
 		endCell = document.getElementById('endCell').value;
-		initMaze(cellSize, startCell, endCell);
+		alg = document.getElementById("radioGroup").selected;
+
+		if(resetCount > 0) {
+			initMaze(cellSize, startCell, endCell);
+		} else {
+			initPathfinder(startCell, endCell);
+		}
 		maze = true;
 	}
 	else {
@@ -89,6 +113,8 @@ function checkStatus() {
 		startY = document.getElementById('startY').value;
 		endX = document.getElementById('endX').value;
 		endY = document.getElementById('endY').value;
+
+		alg = document.getElementById("radioGroup").selected;
 
 		generateMatrix(rows, cols);
 		maze = false;

@@ -6,6 +6,8 @@
 <link rel="import" href="bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="bower_components/paper-slider/paper-slider.html">
 <link rel="import" href="bower_components/paper-button/paper-button.html">
+<link rel="import" href="bower_components/paper-radio-group/paper-radio-group.html">
+<link rel="import" href="bower_components/paper-radio-button/paper-radio-button.html">
 <link rel="import" href="bower_components/paper-toggle-button/paper-toggle-button.html">
 
 <dom-module id="astar-app">
@@ -100,8 +102,9 @@
     }
 
     #canvas-container {
-      width: calc(100% - 325px);
       height: 100vh;
+      padding: 16px;
+      box-sizing: border-box;
     }
 
     .container {
@@ -134,8 +137,8 @@
     }
 
     #cellslider {
-      --paper-slider-knob-color: #2979FF;
-      --paper-slider-active-color: #2979FF;
+      --paper-slider-knob-color: #00E676;
+      --paper-slider-active-color: #00E676;
     }
 
     paper-slider {
@@ -164,7 +167,12 @@
 
     #mazebtn {
       background-color: #757575;
-      display: flex;
+      width: 131px;
+    }
+
+    #rmazebtn {
+      background-color: #757575;
+      width: 131px;
     }
 
     #runbtn {
@@ -182,9 +190,9 @@
       font-family: "Roboto Mono";
       --paper-toggle-button-label-color: rgba(255,255,255,.8);
       --paper-toggle-button-unchecked-button-color: #424242;
-      --paper-toggle-button-checked-bar-color: #2979FF;
-      --paper-toggle-button-checked-button-color: #2979FF;
-      --paper-toggle-button-checked-ink-color: #2979FF;
+      --paper-toggle-button-checked-bar-color: #00E676;
+      --paper-toggle-button-checked-button-color: #00E676;
+      --paper-toggle-button-checked-ink-color: #ccc;
       --paper-toggle-button-label-spacing: 12px;
     }
 
@@ -221,6 +229,15 @@
     #end-coord, #end-cell {
       width: 100%;
       margin-top: 20px;
+    }
+
+    paper-radio-button {
+      font-family: "Roboto Mono";
+      --paper-radio-button-label-color: rgba(255,255,255,.8);
+      --paper-radio-button-unchecked-ink-color: #ccc;
+      --paper-radio-button-checked-color: #2979FF;
+      --paper-radio-button-checked-ink-color: #2979FF;
+      --paper-radio-button-size: 20px;
     }
 
 
@@ -299,15 +316,27 @@
           <paper-slider id="cellslider" value="30" max="70" min="15" editable on-change="_setSlider"></paper-slider>
         </div>
 
+        <div id="radio-container" class="vertical container" on-iron-select="_algChange">
+          <paper-radio-group id="radioGroup" selected="astar">
+            <paper-radio-button name="astar" id="astarRadio">A Star</paper-radio-button>
+            <paper-radio-button name="dijk" id="dikRadio">Dijkstra</paper-radio-button>
+          </paper-radio-group>
+        </div>
+
         <div id="toggle-container" class="vertical container">
           <paper-toggle-button id="diagToggle" checked>Diagonal Traversal</paper-toggle-button>
           <paper-toggle-button id="cornerToggle">Through Corners</paper-toggle-button>
         </div>
 
-        <div id="btn-container" class="container">  
-          <paper-button raised id="step-btn" onclick="step();">Step</paper-button>
-          <paper-button raised id="reset-btn" onclick="reset();">Reset</paper-button>
-          <paper-button raised id="mazebtn" onclick="genMaze();">Generate Maze</paper-button>
+        <div id="btn-container" class="vertical container">  
+          <div class="horizontal justified">
+            <paper-button raised id="step-btn" onclick="step();">Step</paper-button>
+            <paper-button raised id="reset-btn" onclick="reset();">Reset</paper-button>
+          </div>
+          <div id="mazebuttons" class="horizontal justified">
+            <paper-button raised id="mazebtn" onclick="genMaze();">Make Maze</paper-button>
+            <paper-button raised id="rmazebtn" onclick="resetMaze();">Reset Maze</paper-button>
+          </div>
           <paper-button raised id="runbtn" onclick="runPause();" on-tap="_toggleText" toggles>Run</paper-button>
         </div>
 
@@ -460,6 +489,11 @@
       getSliderValues(sizeValue, densityValue, cellValue);
     },
 
+    _algChange : function(e) {
+      var selectedAlg = e.target.selected;
+      setAlg(selectedAlg);
+    },
+
     _modeSelected : function(e) {
       var mode = e.target.selectedItem;
       var sizeslider =  this.$$('#sizeslider');
@@ -469,7 +503,7 @@
       var cellslider =  this.$$('#cellslider');
       var cstitle = this.$$('#cstitle');
       var toggles = this.$$('#toggle-container');
-      var mazeBtn = this.$$('#mazebtn');
+      var mazeBtn = this.$$('#mazebuttons');
       var coordContainer = this.$$('#coord-container');
       var cellContainer = this.$$('#cell-container');
 
