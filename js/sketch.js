@@ -78,6 +78,7 @@ function getSliderValues(size, density, cell) {
 	cols = size;
 	canvas_density = density;
 	cellSize = cell;
+	resetMaze();
 	reset();
 	getCoordValues(startX, startY, cols-1, cols-1);
 }
