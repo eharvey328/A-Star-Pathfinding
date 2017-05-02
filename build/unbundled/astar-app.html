@@ -1,0 +1,353 @@
+<html><head><link rel="import" href="bower_components/polymer/polymer.html">
+<link rel="import" href="bower_components/app-layout/app-layout.html">
+<link rel="import" href="bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="bower_components/paper-item/paper-icon-item.html">
+<link rel="import" href="bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="bower_components/paper-slider/paper-slider.html">
+<link rel="import" href="bower_components/paper-button/paper-button.html">
+<link rel="import" href="bower_components/paper-radio-group/paper-radio-group.html">
+<link rel="import" href="bower_components/paper-radio-button/paper-radio-button.html">
+<link rel="import" href="bower_components/paper-toggle-button/paper-toggle-button.html">
+
+</head><body><dom-module id="astar-app">
+  <style>
+    .horizontal {
+      @apply(--layout-horizontal);
+    }
+
+    .vertical {
+      @apply(--layout-vertical);
+    }
+
+    .center {
+      @apply(--layout-center);
+    }
+
+    .justified {
+      @apply(--layout-justified);
+    }
+
+    .center-justified {
+      @apply(--layout-center-justified);
+    }
+
+    .center-center {
+      @apply(--layout-center-center);
+    }
+
+    #nav-top {
+      color: white;
+      background: #000;
+      height: 256px;  
+      padding: 16px;
+    }
+
+    #nav-title {
+      font-family: 'Roboto Mono';
+      font-size:  28px;
+      opacity: .8;
+    }
+
+    #nav-names {
+      font-size: 14px;
+      opacity: .54;
+    }
+
+    app-drawer {
+      --app-drawer-content-container: {
+        background-color: #212121;
+      }
+      position: absolute;
+    }
+
+    paper-menu {
+      padding-top: 0;
+      --paper-menu-background-color: #212121;
+      --paper-menu-color: rgba(255,255,255,0.8);
+      --paper-menu-selected-item: {
+        font-weight: normal;
+        background-color: #303030;
+      }
+      --paper-menu-focused-item: {
+        background-color: #303030;
+      }
+
+      --paper-menu-focused-item-after: {
+        background-color: transparent;
+      }
+    }
+
+    paper-icon-item {
+      font-family: 'Roboto Mono';
+      min-height: 64px;
+      --paper-item-selected: {
+        background-color: #303030;
+      }
+      --paper-item-focused: {
+        background-color: transparent;
+      }
+
+      --paper-item-focused-before: {
+        background-color: transparent;
+      }
+    }
+
+    #control-menu {
+      width: 325px;
+      padding: 0 16px;
+      height: 100vh;
+      float: left;
+      border-right: 2px solid rgba(0,0,0,0.16);
+      box-sizing: border-box;
+    }
+
+    #canvas-container {
+      height: 100vh;
+      padding: 16px;
+      box-sizing: border-box;
+    }
+
+    .container {
+      padding: 40px 0;
+      border-bottom: 2px solid rgba(0,0,0,0.16);
+    }
+
+    #coord-container, #cell-container {
+      margin-top: -20px;
+    }
+
+    #btn-container {
+      position: absolute;
+      bottom: 0;
+    }
+
+    .slider-title {
+      color: white;
+      opacity: .8; 
+    }
+
+    #sizeslider {
+      --paper-slider-knob-color: #00E676;
+      --paper-slider-active-color: #00E676;
+    }
+
+    #densityslider {
+      --paper-slider-knob-color: #ff1744;
+      --paper-slider-active-color: #ff1744;
+    }
+
+    #cellslider {
+      --paper-slider-knob-color: #00E676;
+      --paper-slider-active-color: #00E676;
+    }
+
+    paper-slider {
+      width: 100%;
+      --paper-slider-input: {
+        width: 75px;
+      }
+    }
+
+    paper-button {
+      margin-top: 18px;
+      color: rgba(0,0,0,.8);
+      font-weight: 500;
+      font-family: "Roboto Mono";
+    }
+
+    #step-btn {
+      background-color: #757575;
+      width: 131px;
+    }
+
+    #reset-btn {
+      background-color: #ff1744;
+      width: 131px;
+    } 
+
+    #mazebtn {
+      background-color: #757575;
+      width: 131px;
+    }
+
+    #rmazebtn {
+      background-color: #757575;
+      width: 131px;
+    }
+
+    #runbtn {
+      background-color: #00C853;
+      display: flex;
+      -webkit-transition: background-color 300ms;
+      transition: background-color 300ms;
+    }
+
+    #runbtn[active] {
+      background-color: #FFEA00;
+    }
+
+    paper-toggle-button {
+      font-family: "Roboto Mono";
+      --paper-toggle-button-label-color: rgba(255,255,255,.8);
+      --paper-toggle-button-unchecked-button-color: #424242;
+      --paper-toggle-button-checked-bar-color: #00E676;
+      --paper-toggle-button-checked-button-color: #00E676;
+      --paper-toggle-button-checked-ink-color: #ccc;
+      --paper-toggle-button-label-spacing: 12px;
+    }
+
+    #diagToggle {
+      margin-bottom: 28px;
+    }
+
+    .coord-input, .cell-input {
+      width: 40px;
+      display: inline-block;
+      --paper-input-container-focus-color: rgba(255,255,255,.8);
+      --paper-input-container-input-color: rgba(255,255,255,.8);
+      --paper-input-container: {
+        padding: 0;
+      }
+      --paper-input-container-input: {
+        padding-left: 12px;
+      }
+    }
+
+    .cell-input {
+      width: 50px;
+    }
+
+    .coord-title {
+      color: rgba(255,255,255,.8);
+      margin-top: 20px;
+    }
+
+    #start-coord, #start-cell {
+      width: 100%;
+    }
+
+    #end-coord, #end-cell {
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    paper-radio-button {
+      font-family: "Roboto Mono";
+      --paper-radio-button-label-color: rgba(255,255,255,.8);
+      --paper-radio-button-unchecked-ink-color: #ccc;
+      --paper-radio-button-checked-color: #2979FF;
+      --paper-radio-button-checked-ink-color: #2979FF;
+      --paper-radio-button-size: 20px;
+    }
+
+
+  </style>
+
+  <template>
+    <app-drawer-layout>
+      <app-drawer>
+        <div id="nav-top" class="vertical justified">
+          <div id="nav-title">A Star Pathfinding</div>
+          <div id="nav-names" class="vertical">
+            <span>By:</span>
+            <span>Eric Harvey &amp;</span>
+            <span>Caleb Kupetz</span>
+          </div>
+        </div>
+
+        <paper-menu id="menu" selected="walls" attr-for-selected="name" on-iron-select="_modeSelected">
+          <paper-icon-item name="walls">
+            <iron-icon icon="apps" item-icon=""></iron-icon>Walls
+          </paper-icon-item>
+          <paper-icon-item id="maze-toggle" name="maze">
+            <iron-icon icon="subdirectory-arrow-right" item-icon=""></iron-icon>Maze
+          </paper-icon-item>
+        </paper-menu>
+        
+      </app-drawer>
+
+      <div id="control-menu" class="vertical">
+
+        <div id="coord-container" class="vertical container">
+          <div id="start-coord" class="horizontal justified">
+            <div class="coord-title">Start Index:</div>
+            <div class="coord-wrapper">
+              <paper-input class="coord-input" id="startX" value="0" type="number" on-input="_setCoord" auto-validate="" allowed-pattern="^\d*$"></paper-input>
+              <paper-input class="coord-input" id="startY" value="0" type="number" on-input="_setCoord" auto-validate="" allowed-pattern="^\d*$"></paper-input>
+            </div>
+          </div>
+
+          <div class="horizontal justified" id="end-coord">
+            <div class="coord-title">End Index:</div>
+            <div class="coord-wrapper">
+              <paper-input class="coord-input" id="endX" value="29" type="number" on-input="_setCoord" auto-validate="" allowed-pattern="^\d*$"></paper-input>
+              <paper-input class="coord-input" id="endY" value="29" type="number" on-input="_setCoord" auto-validate="" allowed-pattern="^\d*$"></paper-input>
+            </div>
+          </div>
+        </div>
+
+        <div id="cell-container" class="vertical container">
+          <div id="start-cell" class="horizontal justified">
+            <div class="coord-title">Start Cell:</div>
+            <div class="coord-wrapper">
+              <paper-input class="cell-input" id="startCell" value="0" type="number" on-input="_setCell" auto-validate="" allowed-pattern="^\d*$"></paper-input>
+            </div>
+          </div>
+
+          <div class="horizontal justified" id="end-cell">
+            <div class="coord-title">End Cell:</div>
+            <div class="coord-wrapper">
+              <paper-input class="cell-input" id="endCell" value="399" type="number" on-input="_setCell" auto-validate="" allowed-pattern="^\d*$"></paper-input>
+            </div>
+          </div>
+        </div>
+
+        <div id="slider-container" class="container">
+          <div id="sstitle" class="slider-title">Size</div>
+          <paper-slider id="sizeslider" value="30" max="100" min="10" editable="" on-change="_setSlider"></paper-slider>
+          <div id="dstitle" class="slider-title">Density</div>
+          <paper-slider id="densityslider" value="20" max="40" editable="" on-change="_setSlider"></paper-slider>
+          <div id="cstitle" class="slider-title">Cell Size</div>
+          <paper-slider id="cellslider" value="30" max="70" min="15" editable="" on-change="_setSlider"></paper-slider>
+        </div>
+
+        <div id="radio-container" class="vertical container" on-iron-select="_algChange">
+          <paper-radio-group id="radioGroup" selected="astar">
+            <paper-radio-button name="astar" id="astarRadio">A Star</paper-radio-button>
+            <paper-radio-button name="dijk" id="dikRadio">Dijkstra</paper-radio-button>
+          </paper-radio-group>
+        </div>
+
+        <div id="toggle-container" class="vertical container">
+          <paper-toggle-button id="diagToggle" checked="">Diagonal Traversal</paper-toggle-button>
+          <paper-toggle-button id="cornerToggle">Through Corners</paper-toggle-button>
+        </div>
+
+        <div id="btn-container" class="vertical container">  
+          <div class="horizontal justified">
+            <paper-button raised="" id="step-btn" onclick="step();">Step</paper-button>
+            <paper-button raised="" id="reset-btn" onclick="reset();">Reset</paper-button>
+          </div>
+          <div id="mazebuttons" class="horizontal justified">
+            <paper-button raised="" id="mazebtn" onclick="genMaze();">Make Maze</paper-button>
+            <paper-button raised="" id="rmazebtn" onclick="resetMaze();">Reset Maze</paper-button>
+          </div>
+          <paper-button raised="" id="runbtn" onclick="runPause();" on-tap="_toggleText" toggles="">Run</paper-button>
+        </div>
+
+      </div>
+
+      <div id="canvas-container" class="vertical center-center">
+        <div id="canvas-holder"></div>
+      </div>
+
+    
+
+  </app-drawer-layout>
+
+</template>
+
+<script>Polymer({is:"astar-app",listeners:{"immediate-value-change":"immediateValueChangeHandler"},ready:function(){this.$.diagToggle.addEventListener("change",function(){this.checked?allowDiagonals=!0:allowDiagonals=!1}),this.$.cornerToggle.addEventListener("change",function(){this.checked?canPassThroughCorners=!0:canPassThroughCorners=!1})},_setCoord:function(){var e=this.$.startX.value,t=this.$.startY.value,l=this.$.endX.value,s=this.$.endY.value,i=this.$.sizeslider.value-1;e>i&&(e=i,this.$.startX.value=i),t>i&&(t=i,this.$.startY.value=i),l>i&&(l=i,this.$.endX.value=i),s>i&&(s=i,this.$.endY.value=i),e<"0"&&(e=0,this.$.startX.value=0),t<"0"&&(t=0,this.$.startY.value=0),l<"0"&&(l=0,this.$.endX.value=0),s<"0"&&(s=0,this.$.endY.value=0),getCoordValues(e,t,l,s)},_setCell:function(){var e=this.$.startCell.value,t=this.$.endCell.value,l=Math.floor(width/this.$.cellslider.value),s=l*l-1;e>s&&(e=s,this.$.startCell.value=s),t>s&&(t=s,this.$.endCell.value=s),e<"0"&&(e=0,this.$.startCell.value=0),t<"0"&&(t=0,this.$.endCell.value=0),getCellValues(e,t)},_toggleText:function(e){var t=e.target;t.active?t.textContent="Pause":"runbtn"==t.id?t.textContent="Run":t.textContent="Generate Maze"},_setSlider:function(){var e=this.$.sizeslider.value,t=this.$.densityslider.value,l=this.$.cellslider.value;this.$.endX.value=e-1,this.$.endY.value=e-1;var s=Math.floor(width/l);this.$.endCell.value=s*s-1,getSliderValues(e,t,l)},immediateValueChangeHandler:function(e){var t=this.$.sizeslider.immediateValue,l=this.$.densityslider.immediateValue,s=this.$.cellslider.immediateValue;this.$.endX.value=t-1,this.$.endY.value=t-1;var i=Math.floor(width/s);this.$.endCell.value=i*i-1,getSliderValues(t,l,s)},_algChange:function(e){var t=e.target.selected;setAlg(t)},_modeSelected:function(e){var t=e.target.selectedItem,l=this.$$("#sizeslider"),s=this.$$("#sstitle"),i=this.$$("#densityslider"),a=this.$$("#dstitle"),n=this.$$("#cellslider"),d=this.$$("#cstitle"),h=this.$$("#toggle-container"),r=this.$$("#mazebuttons"),o=this.$$("#coord-container"),u=this.$$("#cell-container");t&&("Maze"==t.innerText?(l.style.display="none",s.style.display="none",i.style.display="none",a.style.display="none",n.style.display="flex",d.style.display="block",h.style.display="none",o.style.display="none",u.style.display="block",r.style.display="flex"):(l.style.display="flex",s.style.display="block",n.style.display="none",d.style.display="none",i.style.display="flex",a.style.display="block",h.style.display="block",o.style.display="block",u.style.display="none",r.style.display="none")),reset()}});</script>
+</dom-module>
+</body></html>

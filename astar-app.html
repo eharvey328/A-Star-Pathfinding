@@ -100,12 +100,14 @@
       float: left;
       border-right: 2px solid rgba(0,0,0,0.16);
       box-sizing: border-box;
+      overflow-y: auto;
     }
 
     #canvas-container {
       height: 100vh;
       padding: 16px;
       box-sizing: border-box;
+      overflow-x: auto;
     }
 
     .container {
@@ -113,13 +115,17 @@
       border-bottom: 2px solid rgba(0,0,0,0.16);
     }
 
+    #radio-container {
+      min-height: 45px;
+    }
+
     #coord-container, #cell-container {
       margin-top: -20px;
     }
 
     #btn-container {
-      position: absolute;
-      bottom: 0;
+      display: block;
+      border: none;
     }
 
     .slider-title {
@@ -154,6 +160,7 @@
       color: rgba(0,0,0,.8);
       font-weight: 500;
       font-family: "Roboto Mono";
+      height: 43px;
     }
 
     #step-btn {
@@ -239,6 +246,24 @@
       --paper-radio-button-checked-color: #2979FF;
       --paper-radio-button-checked-ink-color: #2979FF;
       --paper-radio-button-size: 20px;
+    }
+
+    @media only screen and (max-height: 893px) {
+      .container {
+        padding: 30px 0;
+      }
+    }
+
+    @media only screen and (max-height: 793px) {
+      .container {
+        padding: 20px 0;
+      }
+    }
+
+    @media only screen and (max-height: 693px) {
+      .container {
+        padding: 16px 0;
+      }
     }
 
 
@@ -335,6 +360,7 @@
             <paper-button raised id="step-btn" onclick="step();">Step</paper-button>
             <paper-button raised id="reset-btn" onclick="reset();">Reset</paper-button>
           </div>
+
           <div id="mazebuttons" class="horizontal justified">
             <paper-button raised id="mazebtn" onclick="genMaze();">Make Maze</paper-button>
             <paper-button raised id="rmazebtn" onclick="resetMaze();">Reset Maze</paper-button>
